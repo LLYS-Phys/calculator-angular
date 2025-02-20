@@ -1,0 +1,56 @@
+:host {
+    display: flex;
+    height: 87vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+    #calculatorSize {
+        display: flex;
+        gap: 1rem;
+        h2 {
+            font-size: 2rem;
+        }
+        button {
+            font-size: 2rem;
+        }
+    }
+    #calculator {
+        padding: 2rem;
+        border: 1px solid black;
+        border-radius: 1rem;
+        box-shadow: 0.25rem 0.25rem 0.25rem darkgray;
+        background-color: lightgray;
+        #result {
+            background-color: lightblue;
+            border: 1px solid black;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1rem;
+            font-size: 5rem;
+            height: 7rem;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        #buttons {
+            .row {
+                button {
+                    margin: 0.25rem;
+                    box-shadow: 0.125rem 0.125rem 0.125rem darkgray;
+                    background-color: rgb(75,75,75);
+                    color: white;
+                    font-size: 2rem;
+                    padding: 3rem;
+                }
+                button.operation {
+                    background-color: rgb(150,150,150);
+                }
+                button.clear {
+                    background-color: rgb(255, 100, 100);
+                }
+            }
+        }
+    }
+}

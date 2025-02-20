@@ -1,0 +1,12 @@
+<section id="calculator">
+    <section id="result">0</section>
+    <section id="buttons">
+        @for (row of buttons; track row) {
+            <div class="row">
+                @for (el of row; track el) {
+                    <button mat-fab [attr.aria-label]="el.label" [class]="el.class">{{ el.text }}</button>
+                }
+            </div>
+        }
+    </section>
+</section>

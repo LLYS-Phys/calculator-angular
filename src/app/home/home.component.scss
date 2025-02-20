@@ -1,0 +1,72 @@
+:host {
+    display: flex;
+    justify-content: center;
+    #calculator-home-link {
+        margin-top: 5rem;
+        padding: 7rem 5rem;
+        background-color: lightblue;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 3rem;
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+        position: relative;
+        transition: background-color 0.2s;
+        &:hover {
+            background-color: rgba(173,216,230,0.8);
+            #addition-icon {
+                animation: blink 1.5s infinite linear;
+            }
+            #superscript-icon {
+                animation: blink 1.5s infinite linear 0.2s;
+            }
+            #filter-icon {
+                animation: blink 1.5s infinite linear 0.4s;
+            }
+            #edit-icon {
+                animation: blink 1.5s infinite linear 0.6s;
+            }
+        }
+        #addition-icon, #superscript-icon, #filter-icon, #edit-icon {
+            color: black;
+            position: absolute;
+            height: 2rem;
+            width: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+        }
+        #addition-icon {
+            inset: 2rem auto auto 2rem;
+        }
+        #superscript-icon {
+            inset: 2rem 2rem auto auto;
+        }
+        #filter-icon {
+            inset: auto auto 2rem 2rem;
+        }
+        #edit-icon {
+            inset: auto 2rem 2rem auto;
+        }
+    }
+}
+@keyframes blink {
+    0% {
+        opacity: 1;
+        transform: rotate(0deg);
+    }
+    33% {
+        opacity: 0;
+        transform: rotate(12deg);
+    }
+    67% {
+        transform: rotate(-12deg);
+    }
+    100% {
+        opacity: 1;
+        transform: rotate(0deg);
+    }
+}

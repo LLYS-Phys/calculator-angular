@@ -1,0 +1,29 @@
+:host {
+    nav {
+        position: fixed;
+        width: calc(100% - 6rem );
+        background-color: lightblue;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 3rem;
+        height: 2rem;
+        a {
+            text-decoration: none;
+            color: black;
+            span {
+                padding-bottom: 0.25rem;
+                background: linear-gradient(currentColor 0 0) bottom left / var(--underline-width, 0%) 0.1rem no-repeat;
+                transition: background-size 0.5s;
+                display: flex;
+                gap: 0.25rem;
+            }
+            &:hover {
+                --underline-width: 100%;
+            }
+        }
+    }
+    .spacer {
+        height: 4rem;
+    }
+}
