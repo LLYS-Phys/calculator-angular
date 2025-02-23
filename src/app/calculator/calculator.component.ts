@@ -23,46 +23,34 @@ export class CalculatorComponent {
   numberAfterDecimal = signal('')
   lengthError = false
 
-  formatNumberToMaxLength(number: number) {
-    if (Math.abs(number) >= 1e8 || Math.abs(number) < 1e-7 && number !== 0) return number.toExponential(3)
-  
-    const isNegative = number < 0
-    const maxDigits = 8 - (isNegative ? 1 : 0)
-  
-    if (number.toString().split('.')[0].length > maxDigits) return number.toExponential(3)
-  
-    return number.toString().slice(0, 8)
-  }
-  
-
   getCalculatorDisplay() {
     if (Number.isNaN(this.firstValue())) return "Error"
 
     let displayValue
     if (this.operator()) {
-      if (this.secondValue() != null || this.hiddenDecimal) {
+      if (this.secondValue() || this.hiddenDecimal) {
         !this.secondValue()
           ? displayValue = "0"
-          : displayValue = this.formatNumberToMaxLength(this.secondValue()!)
+          : displayValue = this.calculating.formatNumberToMaxLength(this.secondValue()!)
       } 
       else {
-        displayValue = this.formatNumberToMaxLength(this.firstValue()) + this.operator()!.text
+        displayValue = this.calculating.formatNumberToMaxLength(this.firstValue()) + this.operator()!.text
       }
     } 
     else {
-      displayValue = this.formatNumberToMaxLength(this.firstValue())
+      displayValue = this.calculating.formatNumberToMaxLength(this.firstValue())
     }
 
     if (this.hiddenDecimal) {
-      const potentialDisplay = displayValue + '.' + this.numberAfterDecimal()
-      if (potentialDisplay.length <= 8) displayValue = potentialDisplay
+      const tempDisplay = displayValue + '.' + this.numberAfterDecimal()
+      if (tempDisplay.length <= 8) displayValue = tempDisplay
     }
 
     return displayValue
   }
   
   updateDisplay(event: string | number, text: string) {
-    if (event === 'C') {
+    if (event == 'C') {
       this.firstValue.set(0)
       this.secondValue.set(null)
       this.operator.set(null)
@@ -72,43 +60,43 @@ export class CalculatorComponent {
       return
     }
 
-    if (Number.isInteger(event) || event === '.') {
-      const isSecondValue = this.operator() !== null
-      const currentValue = isSecondValue ? (this.secondValue() ?? 0) : this.firstValue()
-      const currentValueStr = currentValue.toString()
+    if (Number.isInteger(event) || event == '.') {
+      const currentValue = this.operator() 
+        ? this.secondValue() ? this.secondValue() : 0
+        : this.firstValue()
       
       const fullNumber = this.hiddenDecimal 
-        ? currentValueStr + '.' + this.numberAfterDecimal()
-        : currentValueStr
+        ? currentValue!.toString() + '.' + this.numberAfterDecimal()
+        : currentValue!.toString()
         
-      if (fullNumber.length >= 8 && event !== '.') {
+      if (fullNumber.length >= 8 && event != '.') {
         this.lengthError = true
         return
       }
 
-      if (event === '.') {
-        if (this.hiddenDecimal || currentValueStr.includes('.')) return
+      if (event == '.') {
+        if (this.hiddenDecimal || currentValue!.toString().includes('.')) return
         this.hiddenDecimal = true
-        if (isSecondValue && !this.secondValue()) this.secondValue.set(0)
+        if (this.operator() && !this.secondValue()) this.secondValue.set(0)
         return
       }
 
-      if (!isSecondValue) {
+      if (!this.operator()) {
         if (!this.hiddenDecimal) {
-          const newValue = currentValue === 0 ? Number(event) : Number(currentValueStr + event)
-          this.firstValue.set(Number(this.formatNumberToMaxLength(newValue)))
+          const newValue = currentValue == 0 ? Number(event) : Number(currentValue!.toString() + event)
+          this.firstValue.set(Number(this.calculating.formatNumberToMaxLength(newValue)))
         } 
         else {
-          if ((this.numberAfterDecimal().length + currentValueStr.length + 1) <= 8) this.numberAfterDecimal.update(oldValue => oldValue + event)
+          if ((this.numberAfterDecimal().length + currentValue!.toString().length + 1) <= 8) this.numberAfterDecimal.update(oldValue => oldValue + event)
         }
       } 
       else {
         if (!this.hiddenDecimal) {
-          const newValue = currentValue === 0 ? Number(event) : Number(currentValueStr + event)
-          this.secondValue.set(Number(this.formatNumberToMaxLength(newValue)))
+          const newValue = currentValue == 0 ? Number(event) : Number(currentValue!.toString() + event)
+          this.secondValue.set(Number(this.calculating.formatNumberToMaxLength(newValue)))
         } 
         else {
-          if ((this.numberAfterDecimal().length + currentValueStr.length + 1) <= 8) this.numberAfterDecimal.update(oldValue => oldValue + event)
+          if ((this.numberAfterDecimal().length + currentValue!.toString().length + 1) <= 8) this.numberAfterDecimal.update(oldValue => oldValue + event)
         }
       }
       return
@@ -117,19 +105,18 @@ export class CalculatorComponent {
     this.lengthError = false
 
     if (this.hiddenDecimal) {
-      const decimal = this.numberAfterDecimal()
-      if (decimal) {
-        if (this.secondValue() !== null) {
-          const newValue = Number(this.secondValue()!.toString() + '.' + decimal)
-          this.secondValue.set(Number(this.formatNumberToMaxLength(newValue)))
+      if (this.numberAfterDecimal()) {
+        if (this.secondValue()) {
+          const newValue = Number(this.secondValue()!.toString() + '.' + this.numberAfterDecimal())
+          this.secondValue.set(Number(this.calculating.formatNumberToMaxLength(newValue)))
         } 
         else if (this.operator()) {
-          const newValue = Number('0.' + decimal)
-          this.secondValue.set(Number(this.formatNumberToMaxLength(newValue)))
+          const newValue = Number('0.' + this.numberAfterDecimal())
+          this.secondValue.set(Number(this.calculating.formatNumberToMaxLength(newValue)))
         } 
         else {
-          const newValue = Number(this.firstValue().toString() + '.' + decimal)
-          this.firstValue.set(Number(this.formatNumberToMaxLength(newValue)))
+          const newValue = Number(this.firstValue().toString() + '.' + this.numberAfterDecimal())
+          this.firstValue.set(Number(this.calculating.formatNumberToMaxLength(newValue)))
         }
       }
       this.hiddenDecimal = false
@@ -137,29 +124,30 @@ export class CalculatorComponent {
     }
 
     if (this.operatorsWithOneValue.includes(event.toString())) {
-      const valueToOperate = this.secondValue() !== null ? this.secondValue()! : this.firstValue()
+      const valueToOperate = this.secondValue() ? this.secondValue()! : this.firstValue()
       const result = this.calculating.calculateResultWithOneValue(valueToOperate, event.toString())
       
       this.secondValue()
-        ? this.secondValue.set(Number(this.formatNumberToMaxLength(result)))
-        : this.firstValue.set(Number(this.formatNumberToMaxLength(result)))
+        ? this.secondValue.set(Number(this.calculating.formatNumberToMaxLength(result)))
+        : this.firstValue.set(Number(this.calculating.formatNumberToMaxLength(result)))
       return
     }
 
-    if (event === '=') {
-      if (this.operator() && this.secondValue() !== null) {
+    if (event == '=') {
+      if (this.operator() && this.secondValue()) {
         const result = this.calculating.calculateResultWithTwoValues(this.firstValue(), this.secondValue()!, this.operator()!.event)
-        this.firstValue.set(Number(this.formatNumberToMaxLength(result)))
+        this.firstValue.set(Number(this.calculating.formatNumberToMaxLength(result)))
         this.secondValue.set(null)
         this.operator.set(null)
       }
-    } else {
-      if (this.operator() && this.secondValue() !== null) {
+    } 
+    else {
+      if (this.operator() && this.secondValue()) {
         const result = this.calculating.calculateResultWithTwoValues(this.firstValue(), this.secondValue()!, this.operator()!.event)
-        this.firstValue.set(Number(this.formatNumberToMaxLength(result)))
+        this.firstValue.set(Number(this.calculating.formatNumberToMaxLength(result)))
         this.secondValue.set(null)
       }
-      this.operator.set({ event: event.toString(), text })
+      this.operator.set({ event: event.toString(), text: text })
     }
   }
 } 

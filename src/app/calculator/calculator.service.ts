@@ -37,4 +37,15 @@ export class Calculating {
     }
     return result
   }
+
+  formatNumberToMaxLength(number: number) {
+    if (Math.abs(number) >= 1e8 || Math.abs(number) < 1e-7 && number !== 0) return number.toExponential(3)
+  
+    const isNegative = number < 0
+    const maxDigits = 8 - (isNegative ? 1 : 0)
+  
+    if (number.toString().split('.')[0].length > maxDigits) return number.toExponential(3)
+  
+    return number.toString().slice(0, 8)
+  }
 }
