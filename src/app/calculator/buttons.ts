@@ -1,4 +1,6 @@
-export const BUTTONS = [
+import { CalculatorButton } from "./button.model";
+
+export const BUTTONS: CalculatorButton[][] = [
     [
       { label: "Percentage button", class: "operation", text: "%", event: "%" },
       { label: "7 button", class: null, text: "7", event: 7 },
@@ -27,4 +29,4 @@ export const BUTTONS = [
       { label: "Equal button", class: "operation", text: "=", event: "=" },
       { label: "Addition button", class: "operation", text: "+", event: "+" }
     ]
-  ];  
+];
