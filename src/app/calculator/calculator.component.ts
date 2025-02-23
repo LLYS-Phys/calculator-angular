@@ -133,6 +133,10 @@ export class CalculatorComponent {
       return
     }
 
+    if (this.operator()?.event === "/" && this.secondValue() == 0) {
+      this.firstValue.set(NaN);
+    }    
+
     if (event == '=') {
       if (this.operator() && this.secondValue()) {
         const result = this.calculating.calculateResultWithTwoValues(this.firstValue(), this.secondValue()!, this.operator()!.event)
