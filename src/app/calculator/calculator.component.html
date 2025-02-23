@@ -1,10 +1,11 @@
+<p class="error" [ngClass]="lengthError ? 'error active' : 'error'">You have reached the maximum size of an input number!</p>
 <section id="calculator">
-    <section id="result">0</section>
+    <section id="result">{{ getCalculatorDisplay() }} </section>
     <section id="buttons">
         @for (row of buttons; track row) {
             <div class="row">
                 @for (el of row; track el) {
-                    <button mat-fab [attr.aria-label]="el.label" [class]="el.class">{{ el.text }}</button>
+                    <button mat-fab [attr.aria-label]="el.label" [class]="el.class" (click)="updateDisplay(el.event, el.text)">{{ el.text }}</button>
                 }
             </div>
         }
