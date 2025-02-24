@@ -133,6 +133,8 @@ export class CalculatorComponent {
       this.secondValue() !== null
         ? this.secondValue.set(Number(this.calculating.formatNumberToMaxLength(result)))
         : this.firstValue.set(Number(this.calculating.formatNumberToMaxLength(result)))
+
+      this.afterEquation = true
       return
     }
 
