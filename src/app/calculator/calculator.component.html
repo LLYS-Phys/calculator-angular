@@ -4,10 +4,19 @@
     <section id="buttons">
         @for (row of buttons; track row) {
             <div class="row">
-                @for (el of row; track el) {
-                    <button mat-fab [attr.aria-label]="el.label" [class]="el.class" (click)="updateDisplay(el.event, el.text)">{{ el.text }}</button>
+                @for (button of row; track button) {
+                    <button 
+                        mat-fab 
+                        [attr.aria-label]="button.label" 
+                        [class]="button.class" 
+                        (click)="updateDisplay(button.event, button.text)"
+                    >
+                        {{ button.text }}
+                    </button>
                 }
             </div>
         }
     </section>
 </section>
+first value: {{this.firstValue()}}
+second value: {{this.secondValue()}}
