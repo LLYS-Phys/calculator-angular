@@ -9,5 +9,9 @@ export const routes: Routes = [
     {
         path: 'calculator',
         loadComponent: () => import('./calculator/calculator.component').then(comp => comp.CalculatorComponent)
+    },
+    {
+        path: '**',
+        redirectTo: ''
     }
 ];
